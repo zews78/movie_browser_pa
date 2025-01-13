@@ -14,7 +14,7 @@ const API_KEY = import.meta.env.VITE_REACT_APP_OMDB_API_KEY;
 export const fetchMoviesByGenre = async (page) => {
     try {
     //   const response = await fetch(`${BASE_URL}?apikey=${API_KEY}&s=${encodeURIComponent(genre)}&type=movie&page=${page}`);
-    let text = 'The Matrix';
+    let text = 'world';
     const response = await fetch(`${BASE_URL}?apikey=${API_KEY}&s=${encodeURIComponent(text)}&type=movie&page=${page}`);
       if (!response.ok) {
         throw new Error('Network response was not ok');

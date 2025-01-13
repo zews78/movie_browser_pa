@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 // import './MovieCard.module.css'; // Optional for scoped styles
-import styles from '../styles/FavoriteButton.module.css';
+// import styles from '../styles/FavoriteButton.module.css';
+import { Heart } from 'lucide-react';
 
 const FavoriteButton = ({ movie }) => {
   const [isFavorite, setIsFavorite] = useState(false);
@@ -30,8 +31,18 @@ const FavoriteButton = ({ movie }) => {
 //     </button>
 //   );
 return (
-    <button onClick={toggleFavorite} className={`${styles['favorite-button']} ${isFavorite ? styles.active : ''}`}>
-      {isFavorite ? 'Remove from Favorites' : 'Add to Favorites'}
+    <button
+      onClick={toggleFavorite}
+      className="p-2 rounded-full hover:bg-black/20 transition-colors group/btn"
+      aria-label={isFavorite ? 'Remove from Favorites' : 'Add to Favorites'}
+    >
+      <Heart
+        className={`w-6 h-6 transition-all duration-300 ${
+          isFavorite 
+            ? 'text-red-500 fill-red-500 scale-110' 
+            : 'text-white group-hover/btn:scale-110'
+        }`}
+      />
     </button>
   );
 };

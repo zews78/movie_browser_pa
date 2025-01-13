@@ -4,6 +4,7 @@ import MovieList from '../components/MovieList';
 import SearchBar from '../components/SearchBar';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
+
 const Home = () => {
   const [movies, setMovies] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -49,17 +50,35 @@ const Home = () => {
   };
 
   return (
-    <div>
-      <SearchBar onSearch={handleSearch} />
-      <h1>Popular Movies</h1>
-      <InfiniteScroll
-        dataLength={movies.length}
-        next={fetchMoreData}
-        hasMore={hasMore}
-        loader={<h4>Loading...</h4>}
-      >
-        <MovieList movies={movies} />
-      </InfiniteScroll>
+    <div className="min-h-screen bg-gray-900">
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        {/* Header */}
+        <header className="mb-8">
+          <nav className="flex items-center justify-between">
+            <h1 className="text-3xl font-bold text-white opacity-0 hidden sm:block">MovieFlix</h1>
+            <SearchBar onSearch={handleSearch} />
+          </nav>
+        </header>
+
+        {/* Main Content */}
+        <main>
+          <h2 className="text-xl font-semibold text-white mb-6">
+            {searchQuery ? `Search Results for "${searchQuery}"` : 'Popular Movies'}
+          </h2>
+          <InfiniteScroll
+            dataLength={movies.length}
+            next={fetchMoreData}
+            hasMore={hasMore}
+            loader={
+              <div className="flex justify-center p-4">
+                <div className="w-8 h-8 border-4 border-t-red-600 border-gray-200 rounded-full animate-spin"></div>
+              </div>
+            }
+          >
+            <MovieList movies={movies} />
+          </InfiniteScroll>
+        </main>
+      </div>
     </div>
   );
 };
