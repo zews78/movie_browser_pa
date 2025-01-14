@@ -2,7 +2,9 @@
 
 A React application for browsing movies, built with Vite. This project provides a fast and efficient way to explore movie data, featuring a clean user interface and responsive design.
 
-A modern, and accessible movie browsing application built using a modern frontend framework/library with dynamic search, infinite scrolling, filtering options, and local storage for favorites.
+A modern, and accessible movie browsing application built using a modern frontend framework/library with dynamic search, infinite scrolling, filtering options, and local storage for favourites.
+
+Check the deployed code- [https://movie-browser-pa.vercel.app/](https://movie-browser-pa.vercel.app/)
 
 ## Table of Contents
 
@@ -32,6 +34,10 @@ A modern, and accessible movie browsing application built using a modern fronten
 - Infinite scrolling for loading more movies.
 - Add and remove favorite movies.
 - Responsive design for mobile and desktop views.
+- **Loading Indicators**: Visual feedback while fetching data.
+- **Error Handling**: User-friendly error messages for API failures.
+- **SEO-friendly**: Optimized for search engines with meta tags and clean URLs.
+- **Accessible**: Easy accessible with keyboard, complies with accessibility standards for users with disabilities
 
 ## Pages and Routes
 
@@ -52,6 +58,8 @@ The application is structured into several reusable components:
 - **FavoriteButton**: Allows users to add or remove movies from favorites.
 - **SearchBar**: Allows users to search for movies by title.
 - **NotFound**: Displays a 404 error message.
+- **LoadingIndicator**: Displays a loading spinner while data is being fetched.
+- **ErrorMessage**: Displays error messages when API requests fail.
 
 ## Getting Started
 
@@ -69,7 +77,7 @@ To run the application locally, follow these steps:
 4. **Run the Development Server**:
    - `npm run dev`
 
-Open your browser and navigate to [http://localhost:3000](http://localhost:5173/) to view the application.
+Open your browser and navigate to [http://localhost:5173/)](http://localhost:5173/) to view the application.
 
 ## Design Decisions
 
@@ -81,16 +89,14 @@ Open your browser and navigate to [http://localhost:3000](http://localhost:5173/
 ## Improvements
 
 Several areas can be enhanced for a better user experience and performance:
+- **SEO Optimisation**: Implement Server-Side Rendering (SSR) for improved SEO, similar to frameworks like Next.js.
+- **Filtering Options**: Optimise the APIs and Filter movies by genre, and rating.
 - **Error Handling**: Implement improved error handling for API requests to provide better user feedback in case of failures.
 - **Loading States**: Add loading indicators while fetching data to improve the user experience.
-- **Pagination**: Implement pagination to handle large datasets efficiently.
 - **Unit Testing**: Add unit tests for components to improve reliability and maintainability.
+- **Search Optimisation**: Use debouncer to optimise the dynamic search.
 
-## Contributing
 
-Contributions are welcome! If you have suggestions for improvements or new features, please feel free to:
-- Open an issue, or
-- Submit a pull request.
 
 ## License
 
