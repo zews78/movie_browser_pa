@@ -4,6 +4,8 @@ A React application for browsing movies, built with Vite. This project provides 
 
 A modern, and accessible movie browsing application built using a modern frontend framework/library with dynamic search, infinite scrolling, filtering options, and local storage for favourites.
 
+Check the deployed code- [https://movie-browser-pa.vercel.app/](https://movie-browser-pa.vercel.app/)
+
 ## Table of Contents
 
 - [Technologies Used](#technologies-used)
