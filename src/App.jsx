@@ -1,6 +1,7 @@
 import React from 'react'
 import { Navigate } from 'react-router-dom';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { HelmetProvider } from 'react-helmet-async';
 
 import { useState } from 'react'
 import reactLogo from './assets/react.svg'
@@ -28,20 +29,22 @@ function App() {
         <Route path="*" element={<h1>Page Not Found</h1>} />
       </Routes>
     </Router> */}
+      <HelmetProvider>
+        <Router>
+          <div className="min-h-screen bg-gray-900">
+            <Header />
+            <main className="max-w-7xl mx-auto px-4">
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/favorites" element={<Favorites />} />
+                <Route path="/404" element={<NotFound />} />
+                <Route path="*" element={<Navigate to="/404" replace />} />
+              </Routes>
+            </main>
+          </div>
+        </Router>
 
-<Router>
-      <div className="min-h-screen bg-gray-900">
-        <Header />
-        <main className="max-w-7xl mx-auto px-4">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/favorites" element={<Favorites />} />
-            <Route path="/404" element={<NotFound />} />
-            <Route path="*" element={<Navigate to="/404" replace />} />
-          </Routes>
-        </main>
-      </div>
-    </Router>
+
       {/* <div>
         <a href="https://vite.dev" target="_blank">
           <img src={viteLogo} className="logo" alt="Vite logo" />
@@ -62,6 +65,7 @@ function App() {
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
       </p>
+      </HelmetProvider>
     </>
   )
 }

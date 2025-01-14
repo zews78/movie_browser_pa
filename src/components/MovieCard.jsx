@@ -20,13 +20,16 @@ import { Heart } from 'lucide-react';
                 src={posterUrl}
                 alt={data.title}
                 className="w-full h-full object-cover transform transition-transform duration-300 group-hover:scale-105"
-              />
+                tabIndex="0"
+                aria-label={`Poster of ${data.title}`}
+                />
               
               {/* Dark overlay that appears on hover */}
               <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               
               {/* Info container that slides up */}
-              <div className="absolute inset-x-0 bottom-0 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+              <div className="absolute inset-x-0 bottom-0 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300"   tabIndex="0"
+  aria-label={`Information about ${data.title}`}>
                 {/* Main content area */}
                 <div className="p-4 bg-gradient-to-t from-black via-black/95 to-transparent">
                   {/* Title and year section */}

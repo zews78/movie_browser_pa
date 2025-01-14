@@ -22,6 +22,8 @@ const Header = ({ showSearch = true, onSearch }) => {
                 <a 
                   href="/" 
                   className="text-gray-300 hover:text-white flex items-center gap-2"
+                    tabIndex="0"
+                    aria-label="Home"
                 >
                   <HomeIcon className="w-4 h-4" />
                   <span>Home</span>
@@ -29,6 +31,8 @@ const Header = ({ showSearch = true, onSearch }) => {
                 <a 
                   href="/favorites" 
                   className="text-gray-300 hover:text-white flex items-center gap-2"
+                      tabIndex="0"
+                    aria-label="Favorites"
                 >
                   <Heart className="w-4 h-4" />
                   <span>Favorites</span>
