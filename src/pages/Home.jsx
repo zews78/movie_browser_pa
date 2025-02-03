@@ -1,85 +1,139 @@
-import React, { useEffect, useState } from 'react';
-import { fetchMoviesByGenre, searchMovies } from '../services/movieService';
+import React, { useEffect, useState, useRef } from 'react';
+import { fetchMoviesByGenre, searchMovies, fetchMoviesWithFiltersWithoutQuery, fetchMoviesWithFiltersWithQuery } from '../services/movieService';
 import MovieList from '../components/MovieList';
 import SearchBar from '../components/SearchBar';
-import InfiniteScroll from 'react-infinite-scroll-component';
-import HelmetComponent from '../components/HelmetComponent';
-
+import SEO from '../components/SEO';
+import FilterBar from '../components/FilterBar';
 
 const Home = () => {
     const [movies, setMovies] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
     const [page, setPage] = useState(1);
     const [hasMore, setHasMore] = useState(true);
-
     const [isInitialLoad, setIsInitialLoad] = useState(true);
-
+    const [isFilterLoad, setIsFilterLoad] = useState(true);
+    const observer = useRef();
+    const [filters, setFilters] = useState({
+        year: null,
+        rating: null,
+        genre: null
+    });
 
     useEffect(() => {
         const loadMovies = async () => {
-            if (!searchQuery) {
-                const data = await fetchMoviesByGenre(page);
-                //   console.log(data, 'data just after calling genre fetch call');
-                // setMovies(data);
-                setMovies((prevMovies) => [...prevMovies, ...data]);
-                if (data.length === 0) setHasMore(false);
-            } else {
-                const data = await searchMovies(searchQuery, page);
-                //   console.log(data, 'data just after calling search fetch call');
-                //   setMovies(data);
-                if (isInitialLoad) {
-                    setMovies(data);
-                    setIsInitialLoad(false);
+            if ((filters.year !== null || filters.rating !== null || filters.genre !== null)) {
+
+                if (!searchQuery) {
+                    const data = await fetchMoviesWithFiltersWithoutQuery(filters, page);
+                    if (isFilterLoad) {
+                        setMovies(data);
+                        setIsFilterLoad(false);
+                    } else {
+                        setMovies(prevMovies => [...prevMovies, ...data]);
+                    }
+                    if (data.length === 0) setHasMore(false);
                 } else {
-                    setMovies(prevMovies => [...prevMovies, ...data]);
+                    const data = await fetchMoviesWithFiltersWithQuery(searchQuery, filters, page);
+                    if (isInitialLoad || isFilterLoad) {
+                        if (isInitialLoad) {
+                            setMovies(data);
+                            setIsInitialLoad(false);
+                        }
+                        else if (isFilterLoad) {
+                            setMovies(data);
+                            setIsFilterLoad(false);
+                        };
+                    } else {
+                        setMovies(prevMovies => [...prevMovies, ...data]);
+                    }
+                    if (data.length === 0) setHasMore(false);
+
                 }
-                // setMovies((prevMovies) => [...prevMovies, ...data]);
-                if (data.length === 0) setHasMore(false);
+            } else {
+                if (!searchQuery) {
+                    const data = await fetchMoviesByGenre(page);
+                    setMovies((prevMovies) => [...prevMovies, ...data]);
+                    if (data.length === 0) setHasMore(false);
+                } else {
+                    const data = await searchMovies(searchQuery, page);
+                    if (isInitialLoad) {
+                        setMovies(data);
+                        setIsInitialLoad(false);
+                    } else {
+                        setMovies(prevMovies => [...prevMovies, ...data]);
+                    }
+                    if (data.length === 0) setHasMore(false);
+                }
             }
         };
-        console.log(page, "page");
         loadMovies();
-    }, [searchQuery, page]);
+    }, [searchQuery, page, filters]);
 
     const handleSearch = (query) => {
         setSearchQuery(query);
         setIsInitialLoad(true);
     }
-
-    const fetchMoreData = () => {
-        setPage((prevPage) => prevPage + 1);
+    const handleFilterChange = (filterType, value) => {
+        // Update your movie fetching logic here based on the selected filters
+        console.log(`Filter ${filterType} changed to ${value}`);
+        setFilters(prevFilters => ({
+            ...prevFilters,
+            [filterType]: value
+        }));
+        setIsFilterLoad(true);
+        // Update your fetchMoviesByGenre call to include the new filters
     };
+
+    const lastMovieElementRef = useRef();
+
+    useEffect(() => {
+        if (observer.current) observer.current.disconnect();
+        observer.current = new IntersectionObserver(entries => {
+            if (entries[0].isIntersecting && hasMore) {
+                setPage(prevPage => prevPage + 1);
+            }
+        });
+        if (lastMovieElementRef.current) {
+            observer.current.observe(lastMovieElementRef.current);
+        }
+    }, [hasMore]);
 
     return (
         <div>
-            <HelmetComponent title="Home Page" description="Discover the latest movies and explore different genres on our Home Page." />
+            <SEO
+                title="Home Page"
+                description="Discover the latest movies and explore different genres on our Home Page."
+            />
             <div className="min-h-screen bg-gray-900">
-                <div className="max-w-7xl mx-auto px-4 py-8">
-                    {/* Header */}
-                    <header className="mb-8">
-                        <nav className="flex items-center justify-between">
-                            <h1 className="text-3xl font-bold text-white opacity-0 hidden sm:block">MovieFlix</h1>
-                            <SearchBar onSearch={handleSearch} />
+                <div className="max-w-7xl mx-auto px-2 sm:px-4 py-4 sm:py-8">
+                    <header className="mb-4 sm:mb-8">
+                        <nav className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 sm:justify-between">
+                            {/* FilterBar and SearchBar stacked on mobile, side by side on desktop */}
+                            <div className="w-full sm:w-auto">
+                                <FilterBar onFilterChange={handleFilterChange} />
+                            </div>
+                            <div className="w-full sm:w-auto">
+                                <SearchBar onSearch={handleSearch} />
+                            </div>
                         </nav>
                     </header>
 
-                    {/* Main Content */}
                     <main>
-                        <h2 className="text-xl font-semibold text-white mb-6">
+                        <h2 className="text-lg sm:text-xl font-semibold text-white mb-4 sm:mb-6 px-2">
                             {searchQuery ? `Search Results for "${searchQuery}"` : 'Popular Movies'}
                         </h2>
-                        <InfiniteScroll
-                            dataLength={movies.length}
-                            next={fetchMoreData}
-                            hasMore={hasMore}
-                            loader={
-                                <div className="flex justify-center p-4">
-                                    <div className="w-8 h-8 border-4 border-t-red-600 border-gray-200 rounded-full animate-spin"></div>
-                                </div>
-                            }
-                        >
+
+                        {/* MovieList with adjusted padding */}
+                        <div className="px-1 sm:px-0">
                             <MovieList movies={movies} />
-                        </InfiniteScroll>
+                        </div>
+
+                        {/* Loading indicator */}
+                        <div ref={lastMovieElementRef} className="flex justify-center p-2 sm:p-4">
+                            {hasMore && (
+                                <div className="w-6 h-6 sm:w-8 sm:h-8 border-3 sm:border-4 border-t-red-600 border-gray-200 rounded-full animate-spin" />
+                            )}
+                        </div>
                     </main>
                 </div>
             </div>

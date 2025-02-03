@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import MovieList from '../components/MovieList';
-// import Header from '../components/Header';
 import { Film } from 'lucide-react';
-import HelmetComponent from '../components/HelmetComponent';
+import HelmetComponent from '../components/SEO';
 
 
 const Favorites = () => {
@@ -21,10 +20,11 @@ const Favorites = () => {
 
     return (
         <div>
-            <HelmetComponent title="Favorites Page" description="Browse your favorite saved movies and manage your personal collection on the Favorites Page." />
+            <SEO
+                title="Favorites Page"
+                description="Browse your favorite saved movies and manage your personal collection on the Favorites Page."
+            />
             <div className="min-h-screen bg-gray-900">
-                {/* <Header showSearch={false} /> */}
-
                 <main className="max-w-7xl mx-auto px-4 py-8">
                     <h2 className="text-2xl font-bold text-white mb-6">Your Favorite Movies</h2>
 

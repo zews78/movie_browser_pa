@@ -1,7 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
-// import './MovieCard.module.css'; // Optional for scoped styles
-// import styles from '../styles/FavoriteButton.module.css';
 import { Heart } from 'lucide-react';
 
 const FavoriteButton = ({ movie }) => {
@@ -25,35 +22,20 @@ const FavoriteButton = ({ movie }) => {
     }
   };
 
-//   return (
-//     <button onClick={toggleFavorite} className={`favorite-button ${isFavorite ? 'active' : ''}`}>
-//       {isFavorite ? 'Remove from Favorites' : 'Add to Favorites'}
-//     </button>
-//   );
-return (
+  return (
     <button
       onClick={toggleFavorite}
       className="p-2 rounded-full hover:bg-black/20 transition-colors group/btn"
       aria-label={isFavorite ? 'Remove from Favorites' : 'Add to Favorites'}
     >
       <Heart
-        className={`w-6 h-6 transition-all duration-300 ${
-          isFavorite 
-            ? 'text-red-500 fill-red-500 scale-110' 
+        className={`w-6 h-6 transition-all duration-300 ${isFavorite
+            ? 'text-red-500 fill-red-500 scale-110'
             : 'text-white group-hover/btn:scale-110'
-        }`}
+          }`}
       />
     </button>
   );
 };
-
-// FavoriteButton.propTypes = {
-//   movie: PropTypes.shape({
-//     id: PropTypes.number.isRequired,
-//     title: PropTypes.string.isRequired,
-//     poster_path: PropTypes.string,
-//     release_date: PropTypes.string.isRequired,
-//   }).isRequired,
-// };
 
 export default FavoriteButton;
