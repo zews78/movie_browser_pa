@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import MovieList from '../components/MovieList';
 import { Film } from 'lucide-react';
-import HelmetComponent from '../components/SEO';
+import SEO from '../components/SEO';
 
 
 const Favorites = () => {

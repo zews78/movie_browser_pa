@@ -11,11 +11,11 @@ const API_KEY = import.meta.env.VITE_REACT_APP_OMDB_API_KEY;
 * @returns {Promise<object>} - A promise resolving to the movies data.
 */
 
-export const fetchMoviesByGenre = async (page) => {
+export const fetchMoviesByGenre = async (page, relase_year='') => {
     try {
     //   const response = await fetch(`${BASE_URL}?apikey=${API_KEY}&s=${encodeURIComponent(genre)}&type=movie&page=${page}`);
     let text = 'world';
-    const response = await fetch(`${BASE_URL}?apikey=${API_KEY}&s=${encodeURIComponent(text)}&type=movie&page=${page}`);
+    const response = await fetch(`${BASE_URL}?apikey=${API_KEY}&s=${encodeURIComponent(text)}&type=movie&page=${page}&y=${relase_year}`);
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
@@ -36,9 +36,9 @@ export const fetchMoviesByGenre = async (page) => {
  * Search movies by query
  * @param {string} query
  */
-export const searchMovies = async (query = 'world', page = 1) => {
+export const searchMovies = async (query = 'world', page = 1, relase_year='') => {
   try {
-    const response = await fetch(`${BASE_URL}?apikey=${API_KEY}&s=${encodeURIComponent(query)}&type=movie&page=${page}`);
+    const response = await fetch(`${BASE_URL}?apikey=${API_KEY}&s=${encodeURIComponent(query)}&type=movie&page=${page}&y=${relase_year}`);
 
     if (!response.ok) {
       throw new Error('Failed to search for movies');

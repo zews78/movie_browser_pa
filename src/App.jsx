@@ -1,7 +1,6 @@
 import React from 'react'
 import { Navigate } from 'react-router-dom';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import { HelmetProvider } from 'react-helmet-async';
 import Home from './pages/Home'
 import Favorites from './pages/Favorites';
 import Header from './components/Header';

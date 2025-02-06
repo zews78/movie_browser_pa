@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { ChevronDown, Star } from 'lucide-react';
+import { ChevronDown, ChevronDownIcon, Star } from 'lucide-react';
 
 const FilterBar = ({ onFilterChange }) => {
   const [activeFilter, setActiveFilter] = useState(null);
+  const [selectedFilters, setSelectedFilters] = useState({});
 
   const filters = {
     year: {
@@ -23,13 +24,17 @@ const FilterBar = ({ onFilterChange }) => {
     setActiveFilter(activeFilter === filterKey ? null : filterKey);
   };
 
-  const handleOptionSelect = (filterKey, option) => {
-    onFilterChange(filterKey, option);
+  const handleOptionSelect = (key, option) => {
+    onFilterChange(key, option);
+    setSelectedFilters((prev) => ({
+      ...prev,
+      [key]: option
+    }));
     setActiveFilter(null);
   };
 
   return (
-    <div className="w-full p-4 rounded-lg mb-6">
+    <div className="w-full p-4 rounded-lg">
       <div className="flex flex-wrap gap-2">
         {Object.entries(filters).map(([key, filter]) => (
           <div key={key} className="relative">
@@ -37,14 +42,16 @@ const FilterBar = ({ onFilterChange }) => {
               onClick={() => handleFilterClick(key)}
               className="flex items-center gap-2 px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-white transition-colors"
             >
-              {filter.name}
-              <ChevronDown 
-                className={`w-4 h-4 transition-transform ${
-                  activeFilter === key ? 'rotate-180' : ''
-                }`}
+              <span className="text-gray-300">{filter.name}:</span>
+              <span className="font-medium">
+                {selectedFilters[key] || 'All'}
+              </span>
+              <ChevronDown
+                className={`w-4 h-4 transition-transform ${activeFilter === key ? 'rotate-180' : ''
+                  }`}
               />
             </button>
-            
+
             {activeFilter === key && (
               <div className="absolute z-10 mt-2 w-48 bg-gray-700 rounded-lg shadow-lg py-2 animate-in fade-in slide-in-from-top-2">
                 {filter.options.map((option) => (

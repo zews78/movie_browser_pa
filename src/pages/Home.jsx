@@ -12,6 +12,7 @@ const Home = () => {
     const [hasMore, setHasMore] = useState(true);
     const [isInitialLoad, setIsInitialLoad] = useState(true);
     const [isFilterLoad, setIsFilterLoad] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
     const observer = useRef();
     const [filters, setFilters] = useState({
         year: null,
@@ -21,49 +22,65 @@ const Home = () => {
 
     useEffect(() => {
         const loadMovies = async () => {
-            if ((filters.year !== null || filters.rating !== null || filters.genre !== null)) {
-
-                if (!searchQuery) {
-                    const data = await fetchMoviesWithFiltersWithoutQuery(filters, page);
-                    if (isFilterLoad) {
-                        setMovies(data);
-                        setIsFilterLoad(false);
-                    } else {
-                        setMovies(prevMovies => [...prevMovies, ...data]);
-                    }
-                    if (data.length === 0) setHasMore(false);
-                } else {
-                    const data = await fetchMoviesWithFiltersWithQuery(searchQuery, filters, page);
-                    if (isInitialLoad || isFilterLoad) {
-                        if (isInitialLoad) {
-                            setMovies(data);
-                            setIsInitialLoad(false);
-                        }
-                        else if (isFilterLoad) {
+            setIsLoading(true);
+            try {
+                if ((filters.rating !== null || filters.genre !== null)) {
+                    if (!searchQuery) {
+                        const data = await fetchMoviesWithFiltersWithoutQuery(filters, page);
+                        if (isFilterLoad) {
                             setMovies(data);
                             setIsFilterLoad(false);
-                        };
+                        } else {
+                            setMovies(prevMovies => [...prevMovies, ...data]);
+                        }
+                        if (data.length === 0) setHasMore(false);
                     } else {
-                        setMovies(prevMovies => [...prevMovies, ...data]);
+                        const data = await fetchMoviesWithFiltersWithQuery(searchQuery, filters, page);
+                        if (isInitialLoad || isFilterLoad) {
+                            if (isInitialLoad) {
+                                setMovies(data);
+                                setIsInitialLoad(false);
+                            }
+                            else if (isFilterLoad) {
+                                setMovies(data);
+                                setIsFilterLoad(false);
+                            };
+                        } else {
+                            setMovies(prevMovies => [...prevMovies, ...data]);
+                        }
+                        if (data.length === 0) setHasMore(false);
                     }
-                    if (data.length === 0) setHasMore(false);
-
-                }
-            } else {
-                if (!searchQuery) {
-                    const data = await fetchMoviesByGenre(page);
-                    setMovies((prevMovies) => [...prevMovies, ...data]);
-                    if (data.length === 0) setHasMore(false);
                 } else {
-                    const data = await searchMovies(searchQuery, page);
-                    if (isInitialLoad) {
-                        setMovies(data);
-                        setIsInitialLoad(false);
+                    if (!searchQuery) {
+                        let releaseYear = filters.year ? (filters.year) : null;
+                        const data = await fetchMoviesByGenre(page, releaseYear);
+                        if (isFilterLoad) {
+                            setMovies(data);
+                            setIsFilterLoad(false);
+                        } else {
+                            setMovies(prevMovies => [...prevMovies, ...data]);
+                        }
                     } else {
-                        setMovies(prevMovies => [...prevMovies, ...data]);
+                        const data = await searchMovies(searchQuery, page, filters.year);
+                        if (isInitialLoad || isFilterLoad) {
+                            if (isInitialLoad) {
+                                setMovies(data);
+                                setIsInitialLoad(false);
+                            }
+                            else if (isFilterLoad) {
+                                setMovies(data);
+                                setIsFilterLoad(false);
+                            };
+                        } else {
+                            setMovies(prevMovies => [...prevMovies, ...data]);
+                        }
+                        if (data.length === 0) setHasMore(false);
                     }
-                    if (data.length === 0) setHasMore(false);
                 }
+            } catch (error) {
+                console.error('Error loading movies:', error);
+            } finally {
+                setIsLoading(false);
             }
         };
         loadMovies();
@@ -129,9 +146,9 @@ const Home = () => {
                         </div>
 
                         {/* Loading indicator */}
-                        <div ref={lastMovieElementRef} className="flex justify-center p-2 sm:p-4">
-                            {hasMore && (
-                                <div className="w-6 h-6 sm:w-8 sm:h-8 border-3 sm:border-4 border-t-red-600 border-gray-200 rounded-full animate-spin" />
+                        <div ref={lastMovieElementRef} className="flex justify-center p-4">
+                            {(hasMore || isLoading) && (
+                                <div className="w-8 h-8 border-4 border-t-red-600 border-gray-200 rounded-full animate-spin" />
                             )}
                         </div>
                     </main>
